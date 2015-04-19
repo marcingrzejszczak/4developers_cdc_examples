@@ -1,5 +1,4 @@
-include ':stubs'
 include ':fraudDetectionService'
 include ':loanApplicationService'
 
-rootProject.name = 'geecon_tdd_cdc_examples-root'
+rootProject.name = '4developers_cdc_examples-root'
