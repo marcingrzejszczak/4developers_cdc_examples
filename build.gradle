@@ -53,8 +53,6 @@ configure([project(':fraudDetectionService'), project(':loanApplicationService')
 		stubsOutputDir = wiremockStubsOutputDir
 	}
 
-	generateAccurest.dependsOn('copyStubs')
-
 	jar {
 		version = '0.0.1'
 	}
@@ -77,28 +75,18 @@ configure([project(':fraudDetectionService'), project(':loanApplicationService')
 	}
 
 	clean.dependsOn('cleanup')
+	build.dependsOn('generateWiremockClientStubs')
 
-}
-
-
-configure(project(':fraudDetectionService')) {
-	task copyStubs(type: Copy) {
-		from(new File(wiremockStubsOutputDir, "/fraudDetectionService"))
-		into "${accurestStubsBaseDirectory}/fraud"
-	}
 }
 
 configure(project(':loanApplicationService')) {
 
-	task copyStubs(type: Copy) {
-		from(new File(wiremockStubsOutputDir, "/loanApplicationService"))
-		into "${accurestStubsBaseDirectory}/loan"
-	}
+	test.dependsOn('copyCollaboratorStubs')
+
 	task copyCollaboratorStubs(type: Copy) {
 		File fraudBuildDir = project(':fraudDetectionService').buildDir
-		from(new File(fraudBuildDir, '/production/fraud-detection-service-stubs/'), "/fraudDetectionService")
+		from(new File(fraudBuildDir, '/production/fraudDetectionService-stubs/'), "/mappings")
 		into "src/test/resources/mappings"
 	}
 
-	copyStubs.dependsOn('copyCollaboratorStubs')
 }
